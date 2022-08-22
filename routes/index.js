@@ -26,5 +26,8 @@ module.exports = (app) => {
     .post(auth, ReceptionsController.addNewReception)
     .get(auth, ReceptionsController.getVisitsByUserId);
 
+  router.route('/receptions/:id')
+    .delete(auth, ReceptionsController.deleteReception);
+
   app.use('/', router);
 };

@@ -69,3 +69,17 @@ exports.addNewReception = async (req, res) => {
     return res.status(422).send({ answer: error.message });
   }
 };
+
+exports.deleteReception = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const removed = await Receptions.destroy({ where: { id } });
+    if (removed) {
+      return res.status(200).send(await this.getVisitsByUserId(req, res));
+    }
+
+    return res.status(422).send({ answer: 'Cannot delete, row not found.' });
+  } catch (error) {
+    return res.status(422).send({ answer: error.message });
+  }
+};
