@@ -118,7 +118,7 @@ exports.editReception = async (req, res) => {
   }
 
   if (errors.length) {
-    return res.send({ answer: errors });
+    return res.status(422).send({ answer: errors });
   }
 
   try {
