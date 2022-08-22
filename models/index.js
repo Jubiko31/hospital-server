@@ -7,6 +7,6 @@ User.hasMany(Receptions, { foreignKey: 'id' });
 Receptions.belongsTo(User, { foreignKey: 'id' });
 
 Doctor.hasMany(Receptions, { foreignKey: 'doctor_id' });
-Receptions.belongsTo(Doctor, { foreignKey: 'doctor_id' });
+Receptions.belongsTo(Doctor, { foreignKey: 'id' });
 
 module.exports = { User, Doctor, Receptions };
