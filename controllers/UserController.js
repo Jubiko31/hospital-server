@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
@@ -36,7 +35,7 @@ exports.register = async (req, res) => {
       },
     );
 
-    res.status(201).json({ id, email, token });
+    return res.status(201).json({ id, email, token });
   } catch (err) {
     return res.status(422).send({ msg: err.message });
   }

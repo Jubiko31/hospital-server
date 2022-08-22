@@ -1,15 +1,13 @@
-/* eslint-disable global-require */
+const router = require('express').Router();
+// Controller to get all users
 const controller = require('../controllers');
+const UserController = require('../controllers/UserController');
 
 module.exports = (app) => {
-  const UserController = require('../controllers/UserController');
-  const router = require('express').Router();
+  // Get all user info
+  router.get('/', controller.getUsers);
 
-  router.route('/')
-    .get(controller.getUsers);
-
-  router.route('/registration')
-    .post(UserController.register);
+  router.post('/registration', UserController.register);
 
   app.use('/', router);
 };
