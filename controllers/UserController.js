@@ -9,7 +9,7 @@ exports.register = async (req, res) => {
   try {
     const { body } = req;
     const { fullName, email, password } = req.body;
-    if (!(email && password && fullName)) {
+    if (!(email || password || fullName)) {
       return res.status(422).send('All input is required');
     }
     if (!validateEmail(email)) errors.push('Invalid email format.');

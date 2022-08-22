@@ -1,7 +1,8 @@
 /* eslint-disable global-require */
+const controller = require('../controllers');
+
 module.exports = (app) => {
   const UserController = require('../controllers/UserController');
-  const controller = require('../controllers');
   const router = require('express').Router();
 
   router.route('/')
