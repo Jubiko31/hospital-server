@@ -45,8 +45,8 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!(email || password) || !req.body || req.body === {}) {
-      res.status(422).send('Username or password is not defined.');
+    if (!(email || password) || !req.body) {
+      return res.status(422).send('Username or password is not defined.');
     }
 
     const user = await User.findOne({ where: { email } });
@@ -61,10 +61,10 @@ exports.login = async (req, res) => {
         },
       );
 
-      res.status(200).json({ id, email, token });
+      return res.status(200).json({ id, email, token });
     }
 
-    return res.status(422).send('Invalid credentials.');
+    return res.send('Invalid credentials.');
   } catch (err) {
     return res.status(422).send({ msg: err.message });
   }
