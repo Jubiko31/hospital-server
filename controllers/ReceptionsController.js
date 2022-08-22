@@ -4,7 +4,7 @@ exports.getVisitsByUserId = async (req, res) => {
   const id = req.user;
   try {
     const allVisitsByUser = await Receptions.findAll({
-      where: { id },
+      where: { userId: id },
       include: [
         {
           model: User,
@@ -16,7 +16,7 @@ exports.getVisitsByUserId = async (req, res) => {
           attributes: ['doctorName'],
         },
       ],
-      attributes: { exclude: ['id', 'doctorId'] },
+      attributes: { exclude: ['userId', 'doctorId'] },
     });
     if (allVisitsByUser) {
       return res.status(200).send({ allVisitsByUser });
