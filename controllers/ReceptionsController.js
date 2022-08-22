@@ -94,7 +94,7 @@ exports.editReception = async (req, res) => {
   const editValidInputs = {};
 
   if (id) {
-    if (!patientName && doctorId && date && complaint) {
+    if (!patientName && !doctorId && !date && !complaint) {
       return res.status(422).send({ answer: 'At least one input should be defined!.' });
     }
     if (patientName) {
