@@ -34,23 +34,27 @@ exports.addNewReception = async (req, res) => {
   const {
     patientName, date, complaint, doctorId,
   } = body;
+  const errors = [];
 
   if (!patientName.trim() || !date || !complaint.trim() || !doctorId) {
     return res.status(422).send({ answer: 'All fields are required.' });
   }
   if (!valiDate(date)) {
-    return res.status(422).send({ answer: 'invalid date format.' });
+    errors.push('invalid date format.');
   }
   if (!validName(patientName)) {
-    return res.status(422).send({ answer: 'invalid name input.' });
+    errors.push('invalid name input.');
   }
   if (validText(complaint)) {
-    return res.status(422).send({ answer: 'invalid text input.' });
+    errors.push('invalid text input.');
   }
   if (typeof doctorId !== 'number' || doctorId < 0) {
-    return res.status(422).send({ answer: 'doctor id should be a positibe number.' });
+    errors.push('doctor id should be a positibe number.');
   }
 
+  if (errors.length) {
+    return res.status(422).send({ answer: errors });
+  }
   try {
     body.userId = id;
     const newInstance = await Receptions.create(body, {
