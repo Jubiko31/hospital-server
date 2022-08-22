@@ -3,6 +3,8 @@ const router = require('express').Router();
 const controller = require('../controllers');
 const UserController = require('../controllers/UserController');
 const DoctorController = require('../controllers/DoctorController');
+const ReceptionsController = require('../controllers/ReceptionsController');
+const auth = require('../middleware/auth');
 
 module.exports = (app) => {
   // Get all user info
@@ -19,6 +21,14 @@ module.exports = (app) => {
   router.route('/doctors/:id')
     .delete(DoctorController.removeDoctor)
     .patch(DoctorController.editDoctor);
+
+  router.route('/receptions')
+    .post(auth, ReceptionsController.addNewReception)
+    .get(auth, ReceptionsController.getVisitsByUserId);
+
+  router.route('/receptions/:id')
+    .delete(auth, ReceptionsController.deleteReception)
+    .patch(auth, ReceptionsController.editReception);
 
   app.use('/', router);
 };

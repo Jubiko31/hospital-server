@@ -2,12 +2,12 @@ module.exports = (connect, DataTypes) => {
   const Receptions = connect.define(
     'receptions',
     {
-      recp_id: {
+      recpId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      userName: {
+      patientName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -19,7 +19,7 @@ module.exports = (connect, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      doctor_id: {
+      doctorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
