@@ -23,4 +23,18 @@ const valiDate = (date) => {
   return re.test(date);
 };
 
-module.exports = { validateEmail, validatePassword, valiDate };
+const validName = (name) => {
+  const re = new RegExp(/^[a-zA-Z ]{2,30}$/);
+
+  return re.test(name);
+};
+
+const validText = (text) => {
+  const re = new RegExp(/\W|_/g);
+
+  return re.test(text);
+};
+
+module.exports = {
+  validateEmail, validatePassword, valiDate, validName, validText,
+};

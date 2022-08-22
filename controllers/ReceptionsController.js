@@ -1,5 +1,5 @@
 const { User, Receptions, Doctor } = require('../models');
-const { valiDate } = require('../validation');
+const { valiDate, validName, validText } = require('../validation');
 
 exports.getVisitsByUserId = async (req, res) => {
   const id = req.user;
@@ -35,11 +35,20 @@ exports.addNewReception = async (req, res) => {
     patientName, date, complaint, doctorId,
   } = body;
 
-  if (!body) {
-    return res.status(422).send({ answer: 'No input.' });
+  if (!patientName.trim() || !date || !complaint.trim() || !doctorId) {
+    return res.status(422).send({ answer: 'All fields are required.' });
   }
-  if (!patientName.trim() || !date || !valiDate(date) || !complaint.trim() || !doctorId || typeof doctorId !== 'number' || doctorId < 0) {
-    return res.status(422).send({ answer: 'All fields are required. Invalid inputs.' });
+  if (!valiDate(date)) {
+    return res.status(422).send({ answer: 'invalid date format.' });
+  }
+  if (!validName(patientName)) {
+    return res.status(422).send({ answer: 'invalid name input.' });
+  }
+  if (validText(complaint)) {
+    return res.status(422).send({ answer: 'invalid text input.' });
+  }
+  if (typeof doctorId !== 'number' || doctorId < 0) {
+    return res.status(422).send({ answer: 'doctor id should be a positibe number.' });
   }
 
   try {
