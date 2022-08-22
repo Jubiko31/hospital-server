@@ -27,6 +27,7 @@ module.exports = (app) => {
     .get(auth, ReceptionsController.getVisitsByUserId);
 
   router.route('/receptions/:id')
+    .patch(auth, ReceptionsController.editReception)
     .delete(auth, ReceptionsController.deleteReception);
 
   app.use('/', router);

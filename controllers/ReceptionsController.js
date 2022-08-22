@@ -83,3 +83,53 @@ exports.deleteReception = async (req, res) => {
     return res.status(422).send({ answer: error.message });
   }
 };
+
+exports.editReception = async (req, res) => {
+  const { body } = req;
+  const { id } = req.params;
+  const {
+    patientName, doctorId, date, complaint,
+  } = body;
+  const errors = [];
+  const editValidInputs = {};
+
+  if (id) {
+    if (!patientName && doctorId && date && complaint) {
+      return res.status(422).send({ answer: 'At least one input should be defined!.' });
+    }
+    if (patientName) {
+      if (!patientName.trim() || !validName(patientName)) errors.push('Invalid name format.');
+      else editValidInputs.patientName = patientName.trim();
+    }
+    if (doctorId) {
+      if (typeof doctorId !== 'number' || doctorId < 0) errors.push('Doctor ID should be a positive number.');
+      else editValidInputs.doctorId = doctorId;
+    }
+    if (complaint) {
+      if (!complaint.trim() || validText(complaint)) errors.push('Invalid input.');
+      else editValidInputs.complaint = complaint;
+    }
+    if (date) {
+      if (!valiDate(date)) errors.push('Invalid date format');
+      else editValidInputs.date = date;
+    }
+  } else {
+    return res.status(404).send({ answer: 'row not found.' });
+  }
+
+  if (errors.length) {
+    return res.send({ answer: errors });
+  }
+
+  try {
+    const [edited] = await Receptions.update(editValidInputs, {
+      where: { id },
+    });
+    if (edited) {
+      return await this.getVisitsByUserId(req, res);
+    }
+    return res.status(422).send({ asnwer: 'Invalid id.' });
+  } catch (err) {
+    return res.status(422).send({ asnwer: err.message });
+  }
+};
