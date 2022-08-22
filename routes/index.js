@@ -9,5 +9,7 @@ module.exports = (app) => {
 
   router.post('/registration', UserController.register);
 
+  router.post('/login', UserController.login);
+
   app.use('/', router);
 };

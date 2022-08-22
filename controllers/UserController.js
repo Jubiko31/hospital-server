@@ -40,3 +40,32 @@ exports.register = async (req, res) => {
     return res.status(422).send({ msg: err.message });
   }
 };
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!(email || password) || !req.body) {
+      return res.status(422).send('Username or password is not defined.');
+    }
+
+    const user = await User.findOne({ where: { email } });
+    const { id } = user;
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // create token
+      const token = jwt.sign(
+        { id, email, password },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: '12h',
+        },
+      );
+
+      return res.status(200).json({ id, email, token });
+    }
+
+    return res.send('Invalid credentials.');
+  } catch (err) {
+    return res.status(422).send({ msg: err.message });
+  }
+};
