@@ -36,7 +36,7 @@ exports.addNewReception = async (req, res) => {
   } = body;
 
   if (!body) {
-    return res.status(401).send({ answer: 'No input.' });
+    return res.status(422).send({ answer: 'No input.' });
   }
   if (!patientName.trim() || !date || !valiDate(date) || !complaint.trim() || !doctorId || typeof doctorId !== 'number' || doctorId < 0) {
     return res.status(422).send({ answer: 'All fields are required. Invalid inputs.' });
