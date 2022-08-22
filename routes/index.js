@@ -23,6 +23,7 @@ module.exports = (app) => {
     .patch(DoctorController.editDoctor);
 
   router.route('/receptions')
+    .post(auth, ReceptionsController.addNewReception)
     .get(auth, ReceptionsController.getVisitsByUserId);
 
   app.use('/', router);
