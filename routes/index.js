@@ -16,7 +16,7 @@ module.exports = (app) => {
     .get(DoctorController.getDoctors)
     .post(DoctorController.addNewDoctor);
 
-  router.route('/doctors/:doctor_id')
+  router.route('/doctors/:id')
     .delete(DoctorController.removeDoctor)
     .patch(DoctorController.editDoctor);
 

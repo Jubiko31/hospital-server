@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable camelcase */
 const { Doctor } = require('../models');
 
 exports.getDoctors = async (req, res) => {
@@ -14,7 +12,7 @@ exports.getDoctors = async (req, res) => {
 exports.addNewDoctor = async (req, res) => {
   const { doctorName, studyBranch } = req.body;
   const { body } = req;
-  if ((!doctorName || !studyBranch) || !body) {
+  if (!doctorName || !studyBranch) {
     return res.status(422).send({ answer: 'Name or branch input is not defined.' });
   }
   if (!doctorName.trim()) {
@@ -32,24 +30,24 @@ exports.addNewDoctor = async (req, res) => {
   }
 };
 
-exports.removeDoctor = (req, res) => {
-  const { doctor_id } = req.params;
-  if (!doctor_id.trim()) {
-    res.status(422).send({ answer: 'Invalid id.' });
+exports.removeDoctor = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(422).send({ answer: 'Invalid id.' });
   }
-
-  Doctor.destroy({ where: { doctor_id } })
-    .then(async (removed) => {
-      if (removed) {
-        const all = await Doctor.findAll();
-        return res.send(all);
-      }
-      return res.status(404).send({ answer: 'row not found.' });
-    }).catch((err) => res.status(422).send({ answer: err }));
+  try {
+    const removed = await Doctor.destroy({ where: { id } });
+    if (removed) {
+      return await this.getDoctors(req, res);
+    }
+    return res.status(404).send({ answer: 'row not found.' });
+  } catch (error) {
+    return res.status(422).send({ answer: error });
+  }
 };
 
 exports.editDoctor = async (req, res) => {
-  const { doctor_id } = req.params;
+  const { id } = req.params;
   const { doctorName, studyBranch } = req.body;
   const { body } = req;
   const errors = [];
@@ -58,7 +56,7 @@ exports.editDoctor = async (req, res) => {
   if (!body) {
     return res.status(422).send({ answer: 'Invalid inputs.' });
   }
-  if (doctor_id) {
+  if (id) {
     if (!doctorName && !studyBranch) {
       return res.status(422).send({ answer: 'At least one input should be defined!.' });
     }
@@ -76,10 +74,12 @@ exports.editDoctor = async (req, res) => {
     }
 
     try {
-      const [result] = await Doctor.update(valueKeys, {
-        where: { doctor_id },
+      const updated = await Doctor.upsert({
+        id,
+        doctorName: valueKeys.doctorName,
+        studyBranch: valueKeys.studyBranch,
       });
-      if (result === 1) {
+      if (updated) {
         return await this.getDoctors(req, res);
       }
       return res.status(404).send({ answer: 'Instance not found.' });
@@ -87,4 +87,6 @@ exports.editDoctor = async (req, res) => {
       return res.status(422).send({ answer: error });
     }
   }
+
+  return res.status(422).send({ answer: 'ID not defined' });
 };

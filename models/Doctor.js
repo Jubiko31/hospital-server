@@ -1,6 +1,6 @@
 module.exports = (connect, DataTypes) => {
   const Doctor = connect.define('doctor', {
-    doctor_id: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
